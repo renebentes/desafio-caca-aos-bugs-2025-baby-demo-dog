@@ -1,4 +1,5 @@
 ﻿using BugStore.Customers.CreateCustomer;
+using BugStore.Customers.UpdateCustomer;
 
 namespace BugStore.Customers;
 
@@ -8,7 +9,8 @@ internal static class CustomerEndpoints
     {
         app.MapGroup("/v1/customers")
             .WithTags("Customers")
-            .MapCreateCustomerEndpoint();
+            .MapCreateCustomerEndpoint()
+            .MapUpdateCustomerEndpoint();
 
         return app;
     }

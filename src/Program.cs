@@ -22,7 +22,6 @@ app.MapEndpoints();
 
 app.MapGet("/v1/customers", () => "Hello World!");
 app.MapGet("/v1/customers/{id}", () => "Hello World!");
-app.MapPut("/v1/customers/{id}", () => "Hello World!");
 app.MapDelete("/v1/customers/{id}", () => "Hello World!");
 
 app.MapGet("/v1/products", () => "Hello World!");
