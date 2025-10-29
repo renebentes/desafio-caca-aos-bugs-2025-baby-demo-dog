@@ -1,4 +1,4 @@
-﻿using BugStore.Common;
+using BugStore.Common;
 using BugStore.Common.Primitives.Results;
 
 namespace BugStore.Customers.UpdateCustomer;
@@ -31,7 +31,9 @@ public static class UpdateCustomerEndpoint
             return Results.BadRequest(CustomersErrors.InvalidRequestId);
         }
 
-        var result = await handler.HandleAsync(request, cancellationToken);
-        return result.Map();
+        Result response = await handler.HandleAsync(request, cancellationToken);
+        return response.IsSuccess
+            ? Results.NoContent()
+            : response.ToProblem();
     }
 }

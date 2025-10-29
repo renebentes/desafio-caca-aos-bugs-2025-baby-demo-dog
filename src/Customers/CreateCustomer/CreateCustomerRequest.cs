@@ -1,3 +1,4 @@
+using BugStore.Common.Primitives.Results;
 using BugStore.Messaging;
 using BugStore.Models;
 

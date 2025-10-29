@@ -1,4 +1,5 @@
-﻿using BugStore.Common;
+using BugStore.Common;
+using BugStore.Common.Primitives.Results;
 
 namespace BugStore.Customers.CreateCustomer;
 
@@ -22,7 +23,10 @@ internal static class CreateCustomerEndpoint
         CreateCustomerHandler handler,
         CancellationToken cancellationToken = default)
     {
-        var result = await handler.HandleAsync(request, cancellationToken);
-        return result.Map("/v1/customers");
+        Result<Guid> response = await handler.HandleAsync(request, cancellationToken);
+
+        return response.IsSuccess
+            ? TypedResults.Created($"/v1/customers/{response.Value}", response.Value)
+            : response.ToProblem();
     }
 }

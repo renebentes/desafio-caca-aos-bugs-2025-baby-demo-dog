@@ -1,13 +1,13 @@
-﻿using BugStore.Common.Primitives.Results;
+using BugStore.Common.Primitives.Results;
 using BugStore.Data;
 using BugStore.Messaging;
 
 namespace BugStore.Customers.UpdateCustomer;
 
 public sealed class UpdateCustomerHandler(AppDbContext context)
-    : IRequestHandler<UpdateCustomerRequest, Result>
+    : IRequestHandler<UpdateCustomerRequest>
 {
-    public async Task<Result<Result>> HandleAsync(
+    public async Task<Result> HandleAsync(
         UpdateCustomerRequest request,
         CancellationToken cancellationToken = default)
     {

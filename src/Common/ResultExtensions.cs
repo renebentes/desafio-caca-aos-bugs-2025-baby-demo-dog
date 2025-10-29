@@ -1,24 +1,23 @@
-﻿using BugStore.Common.Primitives.Results;
+using BugStore.Common.Primitives.Results;
 using System.Text;
 
 namespace BugStore.Common;
 
 internal static class ResultExtensions
 {
-    internal static IResult Map<TOut>(this Result<TOut> result, string route = "")
-        => result.Status switch
+    internal static IResult ToProblem<TValue>(this Result<TValue> result)
+        => result.IsSuccess
+        ? throw new InvalidOperationException("Result is successful, cannot convert to problem.")
+        : result.Status switch
         {
-            ResultStatus.Ok => Results.Ok(result.Value),
-            ResultStatus.Created => Results.Created($"{route}", result.Value),
-            ResultStatus.NoContent => Results.NoContent(),
-            ResultStatus.Invalid or ResultStatus.Problem => Results.BadRequest(result.GenerateProblem),
-            ResultStatus.NotFound => Results.NotFound(result.GenerateProblem),
-            ResultStatus.Conflict => Results.Conflict(result.GenerateProblem),
-            ResultStatus.Failure => Results.UnprocessableEntity(result.GenerateProblem),
+            ResultStatus.Invalid or ResultStatus.Problem => result.GenerateProblem(),
+            ResultStatus.NotFound => result.GenerateProblem(),
+            ResultStatus.Conflict => result.GenerateProblem(),
+            ResultStatus.Failure => result.GenerateProblem(),
             _ => Results.StatusCode(StatusCodes.Status500InternalServerError)
         };
 
-    private static IResult GenerateProblem<TOut>(this Result<TOut> result)
+    private static IResult GenerateProblem<TValue>(this Result<TValue> result)
     {
         return Results.Problem(
             detail: GetDetails(result.Errors),
@@ -42,8 +41,8 @@ internal static class ResultExtensions
             {
                 ResultStatus.Invalid or ResultStatus.Problem => StatusCodes.Status400BadRequest,
                 ResultStatus.NotFound => StatusCodes.Status404NotFound,
-                ResultStatus.Failure => StatusCodes.Status422UnprocessableEntity,
                 ResultStatus.Conflict => StatusCodes.Status409Conflict,
+                ResultStatus.Failure => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
 

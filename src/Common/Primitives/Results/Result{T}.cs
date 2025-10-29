@@ -1,20 +1,20 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BugStore.Common.Primitives.Results;
 
 public class Result<TValue>
 {
-    public Result(TValue value)
+    protected Result(TValue? value)
         => Value = value;
 
     protected Result(
-        TValue value,
+        TValue? value,
         ResultStatus status)
         : this(value)
         => Status = status;
 
     protected Result(
-        TValue value,
+        TValue? value,
         ResultStatus status,
         IEnumerable<Error> errors)
         : this(value, status)

@@ -1,19 +1,19 @@
-﻿namespace BugStore.Common.Primitives.Results;
+namespace BugStore.Common.Primitives.Results;
 
-public class Result : Result<Result>
+public sealed class Result : Result<Result>
 {
-    protected Result()
-        : base(default!)
+    private Result()
+        : base(null!)
     {
     }
 
-    protected Result(ResultStatus status)
-        : base(default!, status)
+    private Result(ResultStatus status)
+        : base(null!, status)
     {
     }
 
-    protected Result(ResultStatus status, IEnumerable<Error> errors)
-        : base(default!, status, errors)
+    private Result(ResultStatus status, IEnumerable<Error> errors)
+        : base(null!, status, errors)
     {
     }
 
