@@ -15,7 +15,8 @@ public static class UpdateCustomerEndpoint
             .Produces(StatusCodes.Status204NoContent)
             .Produces<Result>(StatusCodes.Status400BadRequest)
             .Produces<Error>(StatusCodes.Status404NotFound)
-            .Produces<Error>(StatusCodes.Status500InternalServerError);
+            .Produces<Error>(StatusCodes.Status500InternalServerError)
+            ;
 
         return endpoint;
     }
@@ -28,12 +29,14 @@ public static class UpdateCustomerEndpoint
     {
         if (request.Id != id)
         {
-            return Results.BadRequest(CustomersErrors.InvalidRequestId);
+            return TypedResults.ValidationProblem(
+                CustomersErrors.InvalidRequestId(id)
+                .ToValidationProblemError());
         }
 
         Result response = await handler.HandleAsync(request, cancellationToken);
         return response.IsSuccess
-            ? Results.NoContent()
+            ? TypedResults.NoContent()
             : response.ToProblem();
     }
 }

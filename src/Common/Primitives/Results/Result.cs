@@ -1,43 +1,53 @@
 namespace BugStore.Common.Primitives.Results;
 
-public sealed class Result : Result<Result>
+public class Result
 {
-    private Result()
-        : base(null!)
+    protected Result(
+        ResultStatus status,
+        IEnumerable<Error> errors)
     {
+        Status = status;
+        Errors = errors;
     }
 
     private Result(ResultStatus status)
-        : base(null!, status)
+        : this(status, [])
     {
     }
 
-    private Result(ResultStatus status, IEnumerable<Error> errors)
-        : base(null!, status, errors)
-    {
-    }
+    public IEnumerable<Error> Errors { get; }
+
+    public bool IsSuccess => Status is ResultStatus.Ok or ResultStatus.Created or ResultStatus.NoContent;
+
+    public ResultStatus Status { get; }
+
+    public static Result Conflict(Error error)
+       => new(ResultStatus.Conflict, [error]);
+
+    public static Result Conflict(IEnumerable<Error> errors)
+       => new(ResultStatus.Conflict, errors);
 
     public static Result Created()
-        => new(ResultStatus.Created);
+       => new(ResultStatus.Created);
 
     public static Result Failure(Error error)
-        => new(ResultStatus.Failure, [error]);
+       => new(ResultStatus.Failure, [error]);
 
     public static Result Failure(IEnumerable<Error> errors)
        => new(ResultStatus.Failure, errors);
 
-    public static new Result Invalid(Error error)
+    public static Result Invalid(Error error)
        => new(ResultStatus.Invalid, [error]);
 
-    public static new Result Invalid(IEnumerable<Error> errors)
-        => new(ResultStatus.Invalid, errors);
+    public static Result Invalid(IEnumerable<Error> errors)
+       => new(ResultStatus.Invalid, errors);
 
-    public static new Result NoContent()
-        => new(ResultStatus.NoContent);
+    public static Result NoContent()
+       => new(ResultStatus.NoContent);
 
-    public static new Result NotFound(Error error)
-        => new(ResultStatus.NotFound, [error]);
+    public static Result NotFound(Error error)
+       => new(ResultStatus.NotFound, [error]);
 
     public static Result Success()
-       => new();
+       => new(ResultStatus.Ok);
 }

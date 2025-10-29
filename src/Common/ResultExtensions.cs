@@ -1,40 +1,42 @@
 using BugStore.Common.Primitives.Results;
-using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BugStore.Common;
 
 internal static class ResultExtensions
 {
-    internal static IResult ToProblem<TValue>(this Result<TValue> result)
+    internal static IResult ToProblem(this Result result)
         => result.IsSuccess
         ? throw new InvalidOperationException("Result is successful, cannot convert to problem.")
         : result.Status switch
         {
-            ResultStatus.Invalid or ResultStatus.Problem => result.GenerateProblem(),
+            ResultStatus.Invalid => TypedResults.ValidationProblem(result.Errors.ToValidationProblemError()),
             ResultStatus.NotFound => result.GenerateProblem(),
             ResultStatus.Conflict => result.GenerateProblem(),
             ResultStatus.Failure => result.GenerateProblem(),
-            _ => Results.StatusCode(StatusCodes.Status500InternalServerError)
+            _ => result.GenerateProblem()
         };
 
-    private static IResult GenerateProblem<TValue>(this Result<TValue> result)
-    {
-        return Results.Problem(
-            detail: GetDetails(result.Errors),
-            statusCode: GetStatusCode(result.Status),
-            title: GetTitle(result.Status),
-            type: GetType(result.Status));
+    internal static IDictionary<string, string[]> ToValidationProblemError(this IEnumerable<Error> errors)
+        => errors.ToDictionary(
+            e => e.Code,
+            e => new[] { e.Description });
 
-        static string GetTitle(ResultStatus status)
-            => status switch
+    internal static Dictionary<string, string[]> ToValidationProblemError(this Error error)
+        => new()
+        {
             {
-                ResultStatus.Invalid => "Invalid Request.",
-                ResultStatus.Problem => "Problem Request.",
-                ResultStatus.NotFound => "Resource Not Found.",
-                ResultStatus.Conflict => "There was a conflict.",
-                ResultStatus.Failure => "Operation Failed.",
-                _ => "Something went wrong."
-            };
+                error.Code,
+                [error.Description]
+            }
+        };
+
+    private static ProblemHttpResult GenerateProblem(this Result result)
+    {
+        return TypedResults.Problem(
+            extensions: new Dictionary<string, object?> { { "errors", result.Errors } },
+            statusCode: GetStatusCode(result.Status)
+            );
 
         static int GetStatusCode(ResultStatus status)
             => status switch
@@ -45,29 +47,5 @@ internal static class ResultExtensions
                 ResultStatus.Failure => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
-
-        static string GetType(ResultStatus status)
-            => status switch
-            {
-                ResultStatus.Invalid => "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                ResultStatus.Problem => "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                ResultStatus.NotFound => "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                ResultStatus.Conflict => "https://tools.ietf.org/html/rfc7231#section-6.5.8",
-                ResultStatus.Failure => "https://tools.ietf.org/html/rfc4918#section-11.2",
-                _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1"
-            };
-
-        static string GetDetails(IEnumerable<Error> errors)
-        {
-            var details = new StringBuilder("Next status(s) occurred:");
-            foreach (var error in errors)
-            {
-                details
-                    .Append("- ")
-                    .AppendLine(error.ToString());
-            }
-
-            return details.ToString();
-        }
     }
 }

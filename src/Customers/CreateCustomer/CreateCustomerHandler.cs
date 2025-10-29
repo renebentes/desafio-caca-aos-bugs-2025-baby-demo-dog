@@ -23,7 +23,7 @@ public sealed class CreateCustomerHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Invalid(
+            return Result<Guid>.Invalid(
                 validationResult
                 .AsErrors()
             );
@@ -36,7 +36,7 @@ public sealed class CreateCustomerHandler(
 
         if (emailExists)
         {
-            return Result.NotFound(CustomersErrors.EmailNotUnique);
+            return Result<Guid>.Conflict(CustomersErrors.EmailNotUnique);
         }
 
         Customer customer = request;
