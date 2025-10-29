@@ -5,6 +5,11 @@ using BugStore.Customers.GetCustomerById;
 using BugStore.Customers.GetCustomers;
 using BugStore.Customers.UpdateCustomer;
 using BugStore.Data;
+using BugStore.Products.CreateProduct;
+using BugStore.Products.DeleteProduct;
+using BugStore.Products.GetProductById;
+using BugStore.Products.GetProducts;
+using BugStore.Products.UpdateProduct;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -20,7 +25,12 @@ public static class DependencyInjection
             .AddTransient<UpdateCustomerHandler>()
             .AddTransient<DeleteCustomerHandler>()
             .AddTransient<GetCustomersHandler>()
-            .AddTransient<GetCustomerByIdHandler>();
+            .AddTransient<GetCustomerByIdHandler>()
+            .AddTransient<CreateProductHandler>()
+            .AddTransient<UpdateProductHandler>()
+            .AddTransient<DeleteProductHandler>()
+            .AddTransient<GetProductsHandler>()
+            .AddTransient<GetProductByIdHandler>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
