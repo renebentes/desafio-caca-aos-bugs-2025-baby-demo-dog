@@ -27,7 +27,7 @@ internal static class DeleteCustomerEndpoint
         var request = new DeleteCustomerRequest(id);
         Result response = await handler.HandleAsync(request, cancellationToken);
         return response.IsSuccess
-            ? Results.NoContent()
+            ? TypedResults.NoContent()
             : response.ToProblem();
     }
 

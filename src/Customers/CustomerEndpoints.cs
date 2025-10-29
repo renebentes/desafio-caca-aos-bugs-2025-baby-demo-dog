@@ -1,5 +1,7 @@
 using BugStore.Customers.CreateCustomer;
 using BugStore.Customers.DeleteCustomer;
+using BugStore.Customers.GetCustomerById;
+using BugStore.Customers.GetCustomers;
 using BugStore.Customers.UpdateCustomer;
 
 namespace BugStore.Customers;
@@ -12,7 +14,9 @@ internal static class CustomerEndpoints
             .WithTags("Customers")
             .MapCreateCustomerEndpoint()
             .MapUpdateCustomerEndpoint()
-            .MapDeleteCustomerEndpoint();
+            .MapDeleteCustomerEndpoint()
+            .MapGetCustomerEndpoint()
+            .MapGetCustomerByIdEndpoint();
 
         return app;
     }

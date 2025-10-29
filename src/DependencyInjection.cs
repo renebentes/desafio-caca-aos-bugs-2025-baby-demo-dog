@@ -1,6 +1,8 @@
 using BugStore.Common;
 using BugStore.Customers.CreateCustomer;
 using BugStore.Customers.DeleteCustomer;
+using BugStore.Customers.GetCustomerById;
+using BugStore.Customers.GetCustomers;
 using BugStore.Customers.UpdateCustomer;
 using BugStore.Data;
 using FluentValidation;
@@ -16,7 +18,9 @@ public static class DependencyInjection
         services
             .AddTransient<CreateCustomerHandler>()
             .AddTransient<UpdateCustomerHandler>()
-            .AddTransient<DeleteCustomerHandler>();
+            .AddTransient<DeleteCustomerHandler>()
+            .AddTransient<GetCustomersHandler>()
+            .AddTransient<GetCustomerByIdHandler>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

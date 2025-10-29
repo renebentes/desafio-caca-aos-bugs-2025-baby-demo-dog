@@ -14,9 +14,6 @@ app.UseExceptionHandler();
 
 app.MapEndpoints();
 
-app.MapGet("/v1/customers", () => "Hello World!");
-app.MapGet("/v1/customers/{id}", () => "Hello World!");
-
 app.MapGet("/v1/products", () => "Hello World!");
 app.MapGet("/v1/products/{id}", () => "Hello World!");
 app.MapPost("/v1/products", () => "Hello World!");
