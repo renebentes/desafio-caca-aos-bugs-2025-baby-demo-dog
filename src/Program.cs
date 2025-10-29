@@ -1,18 +1,12 @@
 using BugStore;
 using BugStore.Common;
-using BugStore.Customers.CreateCustomer;
-using BugStore.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services
+    .AddApplication()
     .AddPresentation()
-    .AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
-
-builder.Services
-    .AddTransient<CreateCustomerHandler>();
+    .AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -22,7 +16,6 @@ app.MapEndpoints();
 
 app.MapGet("/v1/customers", () => "Hello World!");
 app.MapGet("/v1/customers/{id}", () => "Hello World!");
-app.MapDelete("/v1/customers/{id}", () => "Hello World!");
 
 app.MapGet("/v1/products", () => "Hello World!");
 app.MapGet("/v1/products/{id}", () => "Hello World!");
