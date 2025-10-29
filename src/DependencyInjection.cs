@@ -39,7 +39,6 @@ public static class DependencyInjection
     {
         services
             .AddEndpointsApiExplorer()
-            .AddExceptionHandler<GlobalExceptionHandler>()
             .AddProblemDetails();
 
         return services;
