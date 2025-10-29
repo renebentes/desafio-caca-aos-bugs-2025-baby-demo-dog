@@ -1,18 +1,33 @@
+using BugStore.Common;
 using BugStore.Common.Primitives.Results;
 using BugStore.Data;
 using BugStore.Messaging;
 using BugStore.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace BugStore.Customers.CreateCustomer;
 
-public sealed class CreateCustomerHandler(AppDbContext context)
+public sealed class CreateCustomerHandler(
+    AppDbContext context,
+    IValidator<CreateCustomerRequest> validator)
     : IRequestHandler<CreateCustomerRequest, Guid>
 {
     public async Task<Result<Guid>> HandleAsync(
         CreateCustomerRequest request,
         CancellationToken cancellationToken = default)
     {
+        var validationResult = await validator.ValidateAsync(
+            request,
+            cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return Result.Invalid(
+                validationResult
+                .AsErrors()
+            );
+        }
 
         bool emailExists = await context
             .Customers
