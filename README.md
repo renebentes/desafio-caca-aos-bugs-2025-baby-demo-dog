@@ -19,8 +19,8 @@ Neste processo eu aprendi:
 ## REGRAS DO DESAFIO
 
 - [x] Realizar um fork do repositório do desafio
-- [ ] Refatorar os métodos
-- [ ] Promover baixo acoplamento entre as partes
+- [x] Refatorar os métodos
+- [x] Promover baixo acoplamento entre as partes
 
 ## Sobre o Caça aos Bugs
 
