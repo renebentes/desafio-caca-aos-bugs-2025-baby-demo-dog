@@ -5,6 +5,8 @@ using BugStore.Customers.GetCustomerById;
 using BugStore.Customers.GetCustomers;
 using BugStore.Customers.UpdateCustomer;
 using BugStore.Data;
+using BugStore.Orders.CreateOrder;
+using BugStore.Orders.GetOrderById;
 using BugStore.Products.CreateProduct;
 using BugStore.Products.DeleteProduct;
 using BugStore.Products.GetProductById;
@@ -30,7 +32,9 @@ public static class DependencyInjection
             .AddTransient<UpdateProductHandler>()
             .AddTransient<DeleteProductHandler>()
             .AddTransient<GetProductsHandler>()
-            .AddTransient<GetProductByIdHandler>();
+            .AddTransient<GetProductByIdHandler>()
+            .AddTransient<CreateOrderHandler>()
+            .AddTransient<GetOrderByIdHandler>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

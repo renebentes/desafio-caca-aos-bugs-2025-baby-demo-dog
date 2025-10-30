@@ -1,4 +1,6 @@
 ﻿using BugStore.Customers;
+using BugStore.Orders;
+using BugStore.Products;
 
 namespace BugStore.Common;
 
@@ -13,7 +15,10 @@ public static class Endpoints
             .MapGet("/",
                 () => Results.Ok("Hello World."));
 
-        _ = app.MapCustomerEndpoints();
+        _ = app
+            .MapCustomerEndpoints()
+            .MapProductEndpoints()
+            .MapOrderEndpoints();
 
         return app;
     }
